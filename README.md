@@ -1,0 +1,1 @@
+# Techpatraa-Image-Resizer
