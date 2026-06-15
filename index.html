@@ -3,271 +3,598 @@
 <head>
 <meta charset="UTF-8">
 <title>Image Resizer & Compressor - TechPatraa</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 body{
-    margin:0;
-    font-family:Arial;
-    background:linear-gradient(135deg,#141e30,#243b55);
-    color:#fff;
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:linear-gradient(135deg,#141e30,#243b55);
+  color:#fff;
+  min-height:100vh;
 }
-
-/* layout */
 .header{
-    text-align:center;
-    padding:15px;
-    background:rgba(0,0,0,0.4);
-    font-size:20px;
-    font-weight:bold;
+  text-align:center;
+  padding:15px;
+  background:rgba(0,0,0,0.4);
+  font-size:20px;
+  font-weight:bold;
 }
-
 .container{
-    max-width:900px;
-    margin:auto;
-    padding:20px;
-    display:flex;
-    gap:20px;
-    flex-wrap:wrap;
+  max-width:960px;
+  margin:auto;
+  padding:20px;
+  display:flex;
+  gap:20px;
+  flex-wrap:wrap;
 }
-
-/* box */
 .box{
-    flex:1;
-    min-width:300px;
-    background:rgba(255,255,255,0.08);
-    padding:15px;
-    border-radius:15px;
-    box-shadow:0 0 20px rgba(0,0,0,0.3);
-	overflow:hidden;
+  flex:1;
+  min-width:300px;
+  background:rgba(255,255,255,0.08);
+  padding:18px;
+  border-radius:15px;
+  box-shadow:0 0 20px rgba(0,0,0,0.3);
+  overflow:hidden;
 }
-
-/* upload */
+/* Upload */
 .upload{
-    border:2px dashed #fff;
-    padding:25px;
-    text-align:center;
-    border-radius:12px;
-    cursor:pointer;
+  border:2px dashed #fff;
+  padding:22px;
+  text-align:center;
+  border-radius:12px;
+  cursor:pointer;
+  transition:background .2s;
 }
-
-/* images */
-img{
-    width:100%;
-    margin-top:10px;
-    border-radius:10px;
-    display:none;
+.upload:hover{background:rgba(255,255,255,0.06);}
+/* Section cards inside left box */
+.sec{
+  background:rgba(255,255,255,0.06);
+  border-radius:10px;
+  padding:12px 14px;
+  margin-top:12px;
 }
-
-/* controls */
-input,select{
-    width:100%;
-    padding:10px;
-    margin-top:10px;
-    border-radius:8px;
-    border:none;
+.sec-title{
+  font-size:12px;
+  font-weight:bold;
+  color:#a0b4cc;
+  text-transform:uppercase;
+  letter-spacing:.8px;
+  margin-bottom:8px;
 }
-
-/* buttons */
+label{
+  display:block;
+  font-size:13px;
+  color:#c8d8e8;
+  margin-top:8px;
+  margin-bottom:3px;
+}
+input[type=range]{
+  width:100%;
+  accent-color:#00c6ff;
+  margin-top:4px;
+}
+input[type=number],input[type=color],select{
+  width:100%;
+  padding:8px 10px;
+  margin-top:4px;
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,0.15);
+  background:rgba(0,0,0,0.35);
+  color:#fff;
+  font-size:13px;
+  box-sizing:border-box;
+}
+input[type=color]{
+  padding:3px;
+  height:36px;
+  cursor:pointer;
+}
+select option{background:#1a2a3a;}
+.row2{display:flex;gap:8px;}
+.row2>*{flex:1;}
+/* Mode tabs */
+.mode-tabs{display:flex;gap:6px;margin-bottom:4px;flex-wrap:wrap;}
+.tab{
+  flex:1;
+  min-width:90px;
+  padding:7px 4px;
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,0.15);
+  background:rgba(0,0,0,0.25);
+  color:#a0b4cc;
+  font-size:12px;
+  font-weight:bold;
+  text-align:center;
+  cursor:pointer;
+  transition:all .2s;
+}
+.tab.active{
+  background:linear-gradient(135deg,#0072ff,#00c6ff);
+  color:#fff;
+  border-color:transparent;
+}
+/* Hidden sections */
+.mode-panel{display:none;}
+.mode-panel.active{display:block;}
+/* Buttons */
 button{
-    width:100%;
-    padding:12px;
-    margin-top:10px;
-    border:none;
-    border-radius:10px;
-    cursor:pointer;
-    color:#fff;
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  color:#fff;
+  font-size:14px;
+  font-weight:bold;
 }
-
 .btn1{background:linear-gradient(45deg,#ff416c,#ff4b2b);}
 .btn2{background:linear-gradient(45deg,#00c6ff,#0072ff);}
-.btn3{background:linear-gradient(45deg,#00ff99,#00c6ff);}
-
-/* ad box */
-#container-d6326e2bc11513c8d9ebfbc2f5913f5f{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    max-width:100%;
-    margin:auto;
-	overflow:hidden;
+/* Progress */
+#progressBox{display:none;margin-top:10px;}
+#progressTrack{background:#333;border-radius:10px;height:20px;overflow:hidden;}
+#progressBar{width:0%;height:20px;border-radius:10px;background:linear-gradient(90deg,#00ff99,#00c6ff);transition:width .05s;}
+#progressText{margin:5px 0 0;font-size:13px;text-align:center;}
+/* Right box */
+.right-box{
+  flex:1;
+  min-width:280px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
 }
-
+.preview-card{
+  background:rgba(255,255,255,0.06);
+  border-radius:12px;
+  padding:12px;
+}
+.preview-label{
+  font-size:12px;
+  font-weight:bold;
+  color:#a0b4cc;
+  text-transform:uppercase;
+  letter-spacing:.8px;
+  margin-bottom:6px;
+}
+.preview-card img{
+  width:100%;
+  border-radius:8px;
+  display:none;
+  margin-top:0;
+}
+.preview-empty{
+  color:#3a5070;
+  font-size:12px;
+  text-align:center;
+  padding:18px 0;
+}
+.info-pill{
+  display:inline-block;
+  background:rgba(0,198,255,0.12);
+  border:1px solid rgba(0,198,255,0.25);
+  border-radius:20px;
+  padding:3px 10px;
+  font-size:12px;
+  color:#6dd5ed;
+  margin:5px 4px 0 0;
+}
+/* Ad slot */
 .ad{
-    width:100%;
-    overflow:hidden;
-    text-align:center;
-    margin-top:20px;
+  width:100%;
+  overflow:hidden;
+  text-align:center;
+  margin-top:12px;
 }
+#container-d6326e2bc11513c8d9ebfbc2f5913f5f{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  max-width:100%;
+  margin:auto;
+  overflow:hidden;
+}
+canvas{display:none;}
 </style>
 </head>
-
 <body>
 
-<div class="header">Image Resizer & Compressor - TechPatraa</div>
+<div class="header">🖼 Image Resizer &amp; Compressor — TechPatraa</div>
+
+<!-- TOP AD SLOT -->
+<div style="text-align:center;padding:10px 20px;background:rgba(0,0,0,0.2);">
+  <script>
+    atOptions = {
+      'key' : '40481fbfeb3ccbe3f4d81eba78ba36e8',
+      'format' : 'iframe',
+      'height' : 50,
+      'width' : 320,
+      'params' : {}
+    };
+  </script>
+  <script src="https://www.highperformanceformat.com/40481fbfeb3ccbe3f4d81eba78ba36e8/invoke.js"></script>
+</div>
 
 <div class="container">
 
-<!-- LEFT -->
+<!-- ── LEFT PANEL ── -->
 <div class="box">
-    <div class="upload" onclick="file.click()">📤 Upload Image</div>
-    <input type="file" id="file" accept="image/*" hidden>
 
+  <!-- Upload -->
+  <div class="upload" id="uploadZone" onclick="document.getElementById('file').click()">
+    📤 Click or Drag &amp; Drop Image
+    <div style="font-size:12px;color:#a0b4cc;margin-top:4px;" id="fileName">Supports JPG, PNG, WEBP, GIF, BMP</div>
+  </div>
+  <input type="file" id="file" accept="image/*" hidden>
 
-    <p id="info"></p>
-    <p id="afterInfo"></p>
+  <!-- Info -->
+  <p id="info" style="font-size:13px;margin:6px 0 0;color:#6dd5ed;"></p>
 
-    <label>Resize %: <span id="resizeValue">100%</span></label>
-<input type="range" id="resize" min="10" max="200" value="100">
+  <!-- ── RESIZE MODE ── -->
+  <div class="sec">
+    <div class="sec-title">Resize Mode</div>
+    <div class="mode-tabs">
+      <div class="tab active" data-mode="wh" onclick="setMode('wh',this)">Width × Height</div>
+      <div class="tab" data-mode="pct" onclick="setMode('pct',this)">Percentage</div>
+      <div class="tab" data-mode="social" onclick="setMode('social',this)">Social Media</div>
+    </div>
 
-<label>Compression (Quality): <span id="qualityValue">80%</span></label>
-<input type="range" id="quality" min="10" max="100" value="80">
+    <!-- Width × Height -->
+    <div class="mode-panel active" id="panel-wh">
+      <div class="row2" style="margin-top:6px;">
+        <div>
+          <label>Width</label>
+          <input type="number" id="wVal" placeholder="e.g. 1280" min="1">
+        </div>
+        <div>
+          <label>Height</label>
+          <input type="number" id="hVal" placeholder="e.g. 720" min="1">
+        </div>
+      </div>
+      <label>Unit</label>
+      <select id="unit">
+        <option value="px">px</option>
+        <option value="inch">inch (96dpi)</option>
+        <option value="cm">cm</option>
+        <option value="mm">mm</option>
+      </select>
+      <label style="display:flex;align-items:center;gap:8px;margin-top:8px;cursor:pointer;">
+        <input type="checkbox" id="lockAR" checked style="width:auto;margin:0;">
+        Lock aspect ratio
+      </label>
+    </div>
+
+    <!-- Percentage -->
+    <div class="mode-panel" id="panel-pct">
+      <label>Scale: <span id="pctLabel">100%</span></label>
+      <input type="range" id="pctSlider" min="5" max="300" value="100"
+             oninput="document.getElementById('pctLabel').textContent=this.value+'%'">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:#6a8aaa;margin-top:2px;">
+        <span>5%</span><span>100%</span><span>300%</span>
+      </div>
+    </div>
+
+    <!-- Social Media -->
+    <div class="mode-panel" id="panel-social">
+      <label>Platform Preset</label>
+      <select id="socialPreset" onchange="applySocialPreset()">
+        <optgroup label="▶ YouTube">
+          <option value="1280,720">Thumbnail (1280×720)</option>
+          <option value="2560,1440">Channel Art (2560×1440)</option>
+          <option value="1080,1920">Shorts (1080×1920)</option>
+          <option value="800,800">Profile Photo (800×800)</option>
+        </optgroup>
+        <optgroup label="▶ Facebook">
+          <option value="1200,630">Post (1200×630)</option>
+          <option value="820,312">Cover Photo (820×312)</option>
+          <option value="1080,1920">Story (1080×1920)</option>
+          <option value="180,180">Profile Photo (180×180)</option>
+          <option value="1920,1005">Event Cover (1920×1005)</option>
+        </optgroup>
+        <optgroup label="▶ Instagram">
+          <option value="1080,1080">Square Post (1080×1080)</option>
+          <option value="1080,1350">Portrait Post (1080×1350)</option>
+          <option value="1080,1920">Story (1080×1920)</option>
+          <option value="1080,1920">Reels Cover (1080×1920)</option>
+          <option value="320,320">Profile Photo (320×320)</option>
+        </optgroup>
+        <optgroup label="▶ Twitter / X">
+          <option value="1200,675">Post Image (1200×675)</option>
+          <option value="1500,500">Header (1500×500)</option>
+          <option value="400,400">Profile Photo (400×400)</option>
+        </optgroup>
+        <optgroup label="▶ LinkedIn">
+          <option value="1200,627">Post (1200×627)</option>
+          <option value="1584,396">Cover (1584×396)</option>
+          <option value="400,400">Profile Photo (400×400)</option>
+        </optgroup>
+        <optgroup label="▶ WhatsApp">
+          <option value="1600,900">Status (1600×900)</option>
+          <option value="500,500">DP (500×500)</option>
+        </optgroup>
+      </select>
+      <div style="margin-top:8px;font-size:12px;color:#6dd5ed;" id="socialInfo"></div>
+    </div>
+  </div>
+
+  <!-- ── BACKGROUND FILL ── -->
+  <div class="sec">
+    <div class="sec-title">Background Fill</div>
+    <label>Color for empty/transparent areas</label>
+    <input type="color" id="bgColor" value="#ffffff">
+  </div>
+
+  <!-- ── EXPORT SETTINGS ── -->
+  <div class="sec">
+    <div class="sec-title">Export Settings</div>
+
     <label>Format</label>
     <select id="format">
-        <option value="image/png">PNG</option>
-        <option value="image/jpeg">JPG</option>
-        <option value="image/webp">WEBP</option>
+      <option value="image/jpeg">JPEG</option>
+      <option value="image/png">PNG (lossless)</option>
+      <option value="image/webp">WebP</option>
+      <option value="original">Original format</option>
     </select>
 
-    <button class="btn1" onclick="processImage()">🚀 Process Image</button>
-<div id="progressBox" style="display:none;margin-top:10px;">
-    <div style="background:#333;border-radius:10px;height:20px;">
-        <div id="progressBar"
-             style="width:0%;height:20px;border-radius:10px;
-             background:linear-gradient(90deg,#00ff99,#00c6ff);">
-        </div>
-    </div>
+    <label>Quality: <span id="qualityValue">80%</span></label>
+    <input type="range" id="quality" min="10" max="100" value="80"
+           oninput="document.getElementById('qualityValue').textContent=this.value+'%'">
 
+    <label>Target file size (optional)</label>
+    <div class="row2">
+      <input type="number" id="targetSize" placeholder="e.g. 200" min="1">
+      <select id="targetUnit">
+        <option value="kb">KB</option>
+        <option value="mb">MB</option>
+      </select>
+    </div>
+    <div style="font-size:11px;color:#6a8aaa;margin-top:4px;">
+      Leave blank to use quality slider
+    </div>
+  </div>
+
+  <!-- ── PROCESS BUTTON ── -->
+  <button class="btn1" onclick="processImage()">🚀 Process Image</button>
+
+  <div id="progressBox">
+    <div id="progressTrack"><div id="progressBar"></div></div>
     <p id="progressText">Processing 0%</p>
-</div>
-    <button class="btn2" id="download" style="display:none" onclick="downloadImg()">⬇ Download</button>
-</div>
+  </div>
 
-<!-- RIGHT -->
-<div class="box">
-    <h3>Before / After</h3>
-    <img id="before">
-    <img id="after">
-
-    <canvas id="canvas" style="display:none;"></canvas>
-
-    <!--AD SLOT-->
-    <div class="ad">
-    <script async="async" data-cfasync="false" src="https://pl29703535.effectivecpmnetwork.com/d6326e2bc11513c8d9ebfbc2f5913f5f/invoke.js"></script>
-<div id="container-d6326e2bc11513c8d9ebfbc2f5913f5f"></div>
-    </div>
+  <button class="btn2" id="download" style="display:none" onclick="downloadImg()">⬇ Download</button>
 </div>
 
+<!-- ── RIGHT PANEL ── -->
+<div class="right-box">
+
+  <div class="preview-card">
+    <div class="preview-label">Before</div>
+    <div class="preview-empty" id="emptyBefore">Upload an image</div>
+    <img id="before" alt="Original">
+    <div id="beforeInfo"></div>
+  </div>
+
+  <div class="preview-card">
+    <div class="preview-label">After</div>
+    <div class="preview-empty" id="emptyAfter">Process to see result</div>
+    <img id="after" alt="Processed">
+    <div id="afterInfo"></div>
+  </div>
+
+  <!-- AD SLOT -->
+  <div class="ad">
+    <script async="async" data-cfasync="false"
+      src="https://pl29703535.effectivecpmnetwork.com/d6326e2bc11513c8d9ebfbc2f5913f5f/invoke.js"></script>
+    <div id="container-d6326e2bc11513c8d9ebfbc2f5913f5f"></div>
+  </div>
+
 </div>
+</div>
+
+<canvas id="canvas"></canvas>
 
 <script>
+// ── State ──────────────────────────────────────────────────────────
+let origImg = null;
+let origFile = null;
+let currentMode = 'wh';
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
 
-let img = new Image();
-let canvas = document.getElementById("canvas");
-let ctx = canvas.getContext("2d");
+// ── Unit conversion to px ──────────────────────────────────────────
+function toPx(val, unit) {
+  if (unit === 'px')   return val;
+  if (unit === 'inch') return Math.round(val * 96);
+  if (unit === 'cm')   return Math.round(val * 37.795);
+  if (unit === 'mm')   return Math.round(val * 3.7795);
+  return val;
+}
 
-const file = document.getElementById("file");
-const before = document.getElementById("before");
-const after = document.getElementById("after");
-const info = document.getElementById("info");
-const afterInfo = document.getElementById("afterInfo");
-const resizeSlider = document.getElementById("resize");
-const qualitySlider = document.getElementById("quality");
+// ── Mode tabs ──────────────────────────────────────────────────────
+function setMode(mode, el) {
+  currentMode = mode;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.mode-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + mode).classList.add('active');
+}
 
-const resizeValue = document.getElementById("resizeValue");
-const qualityValue = document.getElementById("qualityValue");
+// ── Social preset ──────────────────────────────────────────────────
+function applySocialPreset() {
+  const val = document.getElementById('socialPreset').value;
+  const [w, h] = val.split(',').map(Number);
+  document.getElementById('socialInfo').textContent = `→ Output: ${w} × ${h} px`;
+}
+applySocialPreset();
 
-resizeSlider.addEventListener("input", function () {
-    resizeValue.textContent = this.value + "%";
+// ── Aspect ratio lock (W×H mode) ─────────────────────────────────
+const wInput = document.getElementById('wVal');
+const hInput = document.getElementById('hVal');
+wInput.addEventListener('input', () => {
+  if (document.getElementById('lockAR').checked && origImg) {
+    const r = origImg.height / origImg.width;
+    hInput.value = Math.round(wInput.value * r) || '';
+  }
 });
-resizeValue.textContent = resizeSlider.value + "%";
-qualityValue.textContent = qualitySlider.value + "%";
-
-qualitySlider.addEventListener("input", function () {
-    qualityValue.textContent = this.value + "%";
+hInput.addEventListener('input', () => {
+  if (document.getElementById('lockAR').checked && origImg) {
+    const r = origImg.width / origImg.height;
+    wInput.value = Math.round(hInput.value * r) || '';
+  }
 });
-file.onchange = function(e){
 
-     let f = e.target.files[0];
-    if(!f) return;
+// ── File upload ───────────────────────────────────────────────────
+const fileEl = document.getElementById('file');
+const uploadZone = document.getElementById('uploadZone');
 
-    after.style.display = "none";
-    after.src = "";
-    document.getElementById("download").style.display = "none";
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.style.background='rgba(255,255,255,0.1)'; });
+uploadZone.addEventListener('dragleave', () => { uploadZone.style.background=''; });
+uploadZone.addEventListener('drop', e => {
+  e.preventDefault(); uploadZone.style.background='';
+  const f = e.dataTransfer.files[0];
+  if (f) { fileEl.files = e.dataTransfer.files; loadFile(f); }
+});
+fileEl.onchange = e => { if (e.target.files[0]) loadFile(e.target.files[0]); };
 
-    img = new Image();
-    img.src = URL.createObjectURL(f);
-
-   img.onload = function(){
-
-    before.src = img.src;
-    before.style.display = "block";
-
-    after.style.display = "none";
-    after.src = "";
-
-    document.getElementById("download").style.display = "none";
-}
-    let kb = (f.size/1024).toFixed(2);
-    info.innerHTML = `📁 Original Size: ${kb} KB`;
-};
-
-function processImage(){
-
-    let resize = document.getElementById("resize").value / 100;
-    let quality = document.getElementById("quality").value / 100;
-    let format = document.getElementById("format").value;
-
-    document.getElementById("download").style.display = "none";
-    document.getElementById("progressBox").style.display = "block";
-
-    let progress = 0;
-
-    let timer = setInterval(function(){
-
-        progress += 5;
-
-        document.getElementById("progressBar").style.width = progress + "%";
-        document.getElementById("progressText").innerHTML =
-        "Processing " + progress + "%";
-
-        if(progress >= 100){
-
-            clearInterval(timer);
-
-            canvas.width = img.width * resize;
-            canvas.height = img.height * resize;
-
-            ctx.clearRect(0,0,canvas.width,canvas.height);
-            ctx.drawImage(img,0,0,canvas.width,canvas.height);
-
-            let output = canvas.toDataURL(format, quality);
-	    let sizeInBytes = Math.round((output.length * 3) / 4);
-            let sizeInKB = (sizeInBytes / 1024).toFixed(2);
-
-            afterInfo.innerHTML =
-`           📦 Processed Size: ${sizeInKB} KB`;
-
-            after.src = output;
-            after.style.display = "block";
-
-            document.getElementById("download").style.display = "block";
-
-            document.getElementById("progressText").innerHTML =
-            "✅ Processing Complete";
-        }
-
-    },40);
+function loadFile(f) {
+  origFile = f;
+  const before = document.getElementById('before');
+  const url = URL.createObjectURL(f);
+  origImg = new Image();
+  origImg.onload = () => {
+    before.src = url;
+    before.style.display = 'block';
+    document.getElementById('emptyBefore').style.display = 'none';
+    document.getElementById('beforeInfo').innerHTML =
+      `<span class="info-pill">${origImg.width}×${origImg.height}px</span>` +
+      `<span class="info-pill">${fmtSize(f.size)}</span>` +
+      `<span class="info-pill">${f.name.split('.').pop().toUpperCase()}</span>`;
+    // Pre-fill W×H inputs
+    document.getElementById('wVal').value = origImg.width;
+    document.getElementById('hVal').value = origImg.height;
+  };
+  origImg.src = url;
+  document.getElementById('fileName').textContent = f.name;
+  document.getElementById('info').textContent = '';
+  resetAfter();
 }
 
-function downloadImg(){
-
-    let a = document.createElement("a");
-    a.download = "pro-image." + document.getElementById("format").value.split("/")[1];
-    a.href = after.src;
-    a.click();
+function resetAfter() {
+  const after = document.getElementById('after');
+  after.style.display = 'none'; after.src = '';
+  document.getElementById('emptyAfter').style.display = 'block';
+  document.getElementById('afterInfo').innerHTML = '';
+  document.getElementById('download').style.display = 'none';
+  document.getElementById('progressBox').style.display = 'none';
+  document.getElementById('progressBar').style.width = '0%';
 }
 
+// ── Get target dimensions ─────────────────────────────────────────
+function getTargetDims() {
+  if (!origImg) return { w: 0, h: 0 };
+  if (currentMode === 'pct') {
+    const p = parseInt(document.getElementById('pctSlider').value) / 100;
+    return { w: Math.round(origImg.width * p), h: Math.round(origImg.height * p) };
+  }
+  if (currentMode === 'social') {
+    const [w, h] = document.getElementById('socialPreset').value.split(',').map(Number);
+    return { w, h };
+  }
+  // wh mode
+  const unit = document.getElementById('unit').value;
+  const w = toPx(parseFloat(document.getElementById('wVal').value) || origImg.width, unit);
+  const h = toPx(parseFloat(document.getElementById('hVal').value) || origImg.height, unit);
+  return { w: Math.max(1, Math.round(w)), h: Math.max(1, Math.round(h)) };
+}
+
+// ── Process ───────────────────────────────────────────────────────
+function processImage() {
+  if (!origImg) { alert('Pehle image upload karo!'); return; }
+
+  resetAfter();
+  document.getElementById('progressBox').style.display = 'block';
+
+  let progress = 0;
+  const timer = setInterval(() => {
+    progress += 5;
+    document.getElementById('progressBar').style.width = Math.min(progress, 100) + '%';
+    document.getElementById('progressText').textContent = 'Processing ' + Math.min(progress, 100) + '%';
+    if (progress >= 100) {
+      clearInterval(timer);
+      doConvert();
+    }
+  }, 40);
+}
+
+function doConvert() {
+  const { w, h } = getTargetDims();
+  const bgColor = document.getElementById('bgColor').value;
+  let fmt = document.getElementById('format').value;
+  if (fmt === 'original') fmt = origFile ? 'image/' + origFile.name.split('.').pop().toLowerCase() : 'image/jpeg';
+
+  canvas.width = w;
+  canvas.height = h;
+  ctx.fillStyle = bgColor;
+  ctx.fillRect(0, 0, w, h);
+  ctx.drawImage(origImg, 0, 0, w, h);
+
+  // Target size mode
+  const targetRaw = parseFloat(document.getElementById('targetSize').value);
+  const targetUnit = document.getElementById('targetUnit').value;
+  let output;
+
+  if (!isNaN(targetRaw) && targetRaw > 0 && ['image/jpeg','image/webp'].includes(fmt)) {
+    const targetBytes = targetUnit === 'mb' ? targetRaw * 1024 * 1024 : targetRaw * 1024;
+    output = compressToTarget(fmt, targetBytes);
+  } else {
+    const q = parseInt(document.getElementById('quality').value) / 100;
+    output = canvas.toDataURL(fmt, q);
+  }
+
+  const after = document.getElementById('after');
+  after.src = output;
+  after.style.display = 'block';
+  document.getElementById('emptyAfter').style.display = 'none';
+
+  const sizeBytes = Math.round((output.length * 3) / 4);
+  document.getElementById('afterInfo').innerHTML =
+    `<span class="info-pill">${w}×${h}px</span>` +
+    `<span class="info-pill">${fmtSize(sizeBytes)}</span>` +
+    `<span class="info-pill">${fmt.split('/')[1].toUpperCase()}</span>`;
+
+  document.getElementById('progressText').textContent = '✅ Done!';
+  document.getElementById('download').style.display = 'block';
+}
+
+// Binary search quality to hit target file size
+function compressToTarget(fmt, targetBytes) {
+  let lo = 0.05, hi = 1.0, best = canvas.toDataURL(fmt, 0.9);
+  for (let i = 0; i < 12; i++) {
+    const mid = (lo + hi) / 2;
+    const data = canvas.toDataURL(fmt, mid);
+    const size = Math.round((data.length * 3) / 4);
+    if (size <= targetBytes) { best = data; lo = mid; }
+    else hi = mid;
+    if (hi - lo < 0.01) break;
+  }
+  return best;
+}
+
+// ── Download ──────────────────────────────────────────────────────
+function downloadImg() {
+  const after = document.getElementById('after');
+  if (!after.src) { alert('Process karo pehle'); return; }
+  let fmt = document.getElementById('format').value;
+  if (fmt === 'original') fmt = origFile ? 'image/' + origFile.name.split('.').pop() : 'image/jpeg';
+  const ext = fmt.split('/')[1];
+  const a = document.createElement('a');
+  a.href = after.src;
+  a.download = 'techpatraa-' + ext + '-' + Date.now() + '.' + ext;
+  a.click();
+}
+
+function fmtSize(b) {
+  return b >= 1048576 ? (b/1048576).toFixed(1)+' MB' : (b/1024).toFixed(0)+' KB';
+}
 </script>
-
 </body>
 </html>
